@@ -3,9 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AuthContext } from "../providers/AuthProvider";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 
 const AddJob = () => {
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate()
 
     const [startDate, setStartDate] = useState(new Date());
 
@@ -23,21 +27,32 @@ const AddJob = () => {
         const formData = {
             title,
             buyer: {
-              email,
-              name:user?.displayName,
-              photo: user?.photoURL,
+                email,
+                name: user?.displayName,
+                photo: user?.photoURL,
             },
             deadline,
             category,
             min_price,
             max_price,
-            description,
+            description,    
         };
         // console.log(formData)
         // make a post request
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/add-job`, formData)
-        console.log(data)
+        
+        try{
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/add-job`,
+                formData
+            );
+            form.reset()
 
+            toast.success("Data Added Successfully")
+            navigate("/my-posted-jobs")
+        }catch (error){
+            console.log(error)
+        }
+        
     };
 
     return (
