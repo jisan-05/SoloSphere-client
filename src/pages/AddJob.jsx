@@ -35,7 +35,8 @@ const AddJob = () => {
             category,
             min_price,
             max_price,
-            description,    
+            description,
+            bid_count:0    
         };
         // console.log(formData)
         // make a post request

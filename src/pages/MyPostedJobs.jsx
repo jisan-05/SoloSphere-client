@@ -28,11 +28,39 @@ const MyPostedJobs = () => {
             const data = await axios.delete(
                 `${import.meta.env.VITE_API_URL}/job/${id}`
             );
-            toast.success("Job Deleted Successfully")
-            console.log(data)
+            fetchAllJobs();
+            toast.success("Job Deleted Successfully");
+            console.log(data);
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const modernDelete = (id) => {
+        toast((t) => (
+            <div className="flex gap-2 items-center">
+                <div>
+                    <p>Are you sure ? </p>
+                </div>
+                <div>
+                    <button
+                        className="px-5 py-2 bg-orange-700 rounded-lg text-white m-1"
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            handleDelete(id);
+                        }}
+                    >
+                        Yes
+                    </button>
+                    <button
+                        className="px-5 py-2 bg-gray-700 rounded-lg text-white m-1"
+                        onClick={() => toast.dismiss(t.id)}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ));
     };
 
     return (
@@ -40,7 +68,7 @@ const MyPostedJobs = () => {
             <div className="flex items-center gap-x-3">
                 <h2 className="text-lg font-medium text-gray-800 ">
                     My Posted Jobs
-                </h2>
+            </h2>
 
                 <span className="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full ">
                     {jobs.length} Job
@@ -119,7 +147,19 @@ const MyPostedJobs = () => {
                                             <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                 <div className="flex items-center gap-x-2">
                                                     <p
-                                                        className={`px-3 py-1  text-blue-500 bg-blue-100/60 text-xs  rounded-full`}
+                                                        className={`px-3 py-1 ${
+                                                            job.category ===
+                                                                "Web Development" &&
+                                                            " text-blue-500 bg-blue-100/60"
+                                                        } ${
+                                                            job.category ===
+                                                                "Digital Marketing" &&
+                                                            " text-green-500 bg-green-100/60"
+                                                        } ${
+                                                            job.category ===
+                                                                "Graphics Design" &&
+                                                            " text-red-600 bg-red-100/60"
+                                                        } text-xs  rounded-full`}
                                                     >
                                                         {job.category}
                                                     </p>
@@ -136,7 +176,7 @@ const MyPostedJobs = () => {
                                                 <div className="flex items-center gap-x-6">
                                                     <button
                                                         onClick={() =>
-                                                            handleDelete(
+                                                            modernDelete(
                                                                 job._id
                                                             )
                                                         }
@@ -159,7 +199,7 @@ const MyPostedJobs = () => {
                                                     </button>
 
                                                     <Link
-                                                        to={`/update/1`}
+                                                        to={`/update/${job._id}`}
                                                         className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none"
                                                     >
                                                         <svg
