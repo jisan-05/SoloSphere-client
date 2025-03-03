@@ -48,6 +48,9 @@ const JobDetails = () => {
         const comment = form.comment.value;
         // const deadline = startDate
 
+        // check bid permission validation
+        if (user?.email === buyer?.email) return toast.error("Action not permitted");
+
         // 1. Deadline crossed validation
         if (compareAsc(new Date(), new Date(deadline)) === 1)
             return toast.error("Deadline Crossed");
@@ -58,8 +61,12 @@ const JobDetails = () => {
                 "Offer less or at least equal to maximum price!"
             );
 
+        // offered deadline is within sellers deadline validation
+        if (compareAsc(new Date(startDate), new Date(deadline)) === 1)
+            return toast.error("Offer a date within deadline");
+
         const bidData = { price, email, comment, deadline };
-        console.log(bidData)
+        console.log(bidData);
     };
 
     return (
