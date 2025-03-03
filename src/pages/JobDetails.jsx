@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 import toast from "react-hot-toast";
 
@@ -14,6 +14,7 @@ const JobDetails = () => {
     const [job, setJob] = useState({});
     const { id } = useParams();
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchJobData();
@@ -35,21 +36,24 @@ const JobDetails = () => {
         min_price,
         max_price,
         description,
-        // _id,
+        _id,
         buyer,
+        
     } = job || {};
 
     // Handle Submit
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const price = form.price.value;
         const email = user?.email;
         const comment = form.comment.value;
+        const jobId = _id;
         // const deadline = startDate
 
         // check bid permission validation
-        if (user?.email === buyer?.email) return toast.error("Action not permitted");
+        if (user?.email === buyer?.email)
+            return toast.error("Action not permitted");
 
         // 1. Deadline crossed validation
         if (compareAsc(new Date(), new Date(deadline)) === 1)
@@ -65,8 +69,21 @@ const JobDetails = () => {
         if (compareAsc(new Date(startDate), new Date(deadline)) === 1)
             return toast.error("Offer a date within deadline");
 
-        const bidData = { price, email, comment, deadline };
-        console.log(bidData);
+        const bidData = { price, email, comment, deadline,jobId };
+
+        try {
+            const { data } = await axios.post(
+                `${import.meta.env.VITE_API_URL}/add-bid`,
+                bidData
+            );
+            form.reset();
+
+            toast.success("Bids Data Added Successfully");
+            console.log(data);
+            // navigate("/my-bids")
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -103,7 +120,11 @@ const JobDetails = () => {
                             </p>
                         </div>
                         <div className="rounded-full object-cover overflow-hidden w-14 h-14">
-                            <img src={buyer?.photo} alt="" />
+                            <img
+                                referrerPolicy="no-referrer"
+                                src={buyer?.photo}
+                                alt=""
+                            />
                         </div>
                     </div>
                     <p className="mt-6 text-lg font-bold text-gray-600 ">
