@@ -15,11 +15,13 @@ const MyBids = () => {
 
     const fetchAllBids = async () => {
         const { data } = await axios.get(
-            `${import.meta.env.VITE_API_URL}/bids/${user.email}`
+            `${import.meta.env.VITE_API_URL}/bids/${user.email}'`
         );
         setBids(data);
     };
-    console.log(bids)
+    const handleStatusChange = async(id,prevStatus,status) => {
+      console.log(id,prevStatus,status)
+    }
 
   return (
     <section className='container px-4 mx-auto my-12'>
@@ -85,7 +87,7 @@ const MyBids = () => {
                 <tbody className='bg-white divide-y divide-gray-200 '>
 
                   {
-                    bids.map(bid => <BidTableRow key={bid._id} bid={bid}></BidTableRow>)
+                    bids.map(bid => <BidTableRow handleStatusChange={handleStatusChange} key={bid._id} bid={bid}></BidTableRow>)
                   }
 
                   

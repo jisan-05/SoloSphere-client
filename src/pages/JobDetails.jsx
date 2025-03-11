@@ -38,7 +38,6 @@ const JobDetails = () => {
         description,
         _id,
         buyer,
-        
     } = job || {};
 
     // Handle Submit
@@ -69,8 +68,17 @@ const JobDetails = () => {
         if (compareAsc(new Date(startDate), new Date(deadline)) === 1)
             return toast.error("Offer a date within deadline");
 
-        const bidData = { price, email, comment, deadline:startDate,jobId,title,
-            category,status:'pending'};
+        const bidData = {
+            price,
+            email,
+            comment,
+            deadline: startDate,
+            jobId,
+            title,
+            category,
+            buyer: buyer?.email,
+            status: "pending",
+        };
 
         try {
             const { data } = await axios.post(
@@ -81,10 +89,10 @@ const JobDetails = () => {
 
             toast.success("Bids Data Added Successfully");
             console.log(data);
-            navigate("/my-bids")
+            navigate("/my-bids");
         } catch (error) {
             console.log(error);
-            toast.error(error?.response?.data)
+            toast.error(error?.response?.data);
         }
     };
 
