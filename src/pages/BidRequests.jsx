@@ -20,20 +20,21 @@ const BidRequests = () => {
     };
 
     const handleStatusChange = async (id, prevStatus, status) => {
-        if (prevStatus === status || prevStatus === "Completed"){
-          return console.log("Not Allowed");
+        if (prevStatus === status || prevStatus === "Completed") {
+            return console.log("Not Allowed");
         }
-        try{
-          const {data} = await axios.patch(`${import.meta.env.VITE_API_URL}/bid-status-update/${id}`, {status})
-          console.log(data)
+        try {
+            const { data } = await axios.patch(
+                `${import.meta.env.VITE_API_URL}/bid-status-update/${id}`,
+                { status }
+            );
+            console.log(data);
 
-          // refresh ui 
-          fetchAllBids();
-
-        }catch(err){
-          console.log(err)
+            // refresh ui
+            fetchAllBids();
+        } catch (err) {
+            console.log(err);
         }
-            
     };
 
     return (
