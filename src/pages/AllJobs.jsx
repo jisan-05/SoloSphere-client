@@ -5,15 +5,18 @@ import axios from 'axios'
 
 const AllJobs = () => {
   const [jobs,setJobs] = useState([])
+  const [filter,setFilter] = useState('')
+  const [search,setSearch] = useState('')
   useEffect(()=>{
+    const fetchAllJobs = async () => {
+      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/all-jobs?filter=${filter}&search=${search}`)
+      setJobs(data)
+    }
     fetchAllJobs()
-  },[])
+  },[filter, search])
 
-  const fetchAllJobs = async () => {
-    const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/jobs`)
-    setJobs(data)
-  }
-  console.log(jobs)
+  
+  // console.log(search)
 
   return (
     <div className='container px-6 py-10 mx-auto min-h-[calc(100vh-306px)] flex flex-col justify-between'>
@@ -24,6 +27,7 @@ const AllJobs = () => {
               name='category'
               id='category'
               className='border p-4 rounded-lg'
+              onChange={(e) => setFilter(e.target.value)}
             >
               <option value=''>Filter By Category</option>
               <option value='Web Development'>Web Development</option>
@@ -38,6 +42,7 @@ const AllJobs = () => {
                 className='px-6 py-2 text-gray-700 placeholder-gray-500 bg-white outline-none focus:placeholder-transparent'
                 type='text'
                 name='search'
+                onChange={e=> setSearch(e.target.value)}
                 placeholder='Enter Job Title'
                 aria-label='Enter Job Title'
               />

@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import axios from "axios";
 import BidRequestTableRow from "../components/BidRequestTableRow";
+import toast from "react-hot-toast";
 
 const BidRequests = () => {
     const { user } = useContext(AuthContext);
@@ -29,11 +30,13 @@ const BidRequests = () => {
                 { status }
             );
             console.log(data);
+            toast.success(`Status Changed To ${status}`)
 
             // refresh ui
             fetchAllBids();
         } catch (err) {
             console.log(err);
+            toast.error(err.message)
         }
     };
 
