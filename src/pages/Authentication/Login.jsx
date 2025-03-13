@@ -4,6 +4,7 @@ import logo from '../../assets/images/logo.png'
 import { useContext } from 'react'
 import { AuthContext } from '../../providers/AuthProvider'
 import toast from 'react-hot-toast'
+// import axios from 'axios'
 const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -15,7 +16,8 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle()
-
+      // generate token
+      
       toast.success('Signin Successful')
       navigate(from, { replace: true })
     } catch (err) {
