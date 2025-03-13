@@ -7,15 +7,21 @@ const AllJobs = () => {
   const [jobs,setJobs] = useState([])
   const [filter,setFilter] = useState('')
   const [search,setSearch] = useState('')
+  const [sort,setSort] = useState('')
   useEffect(()=>{
     const fetchAllJobs = async () => {
-      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/all-jobs?filter=${filter}&search=${search}`)
+      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/all-jobs?filter=${filter}&search=${search}&sort=${sort}`)
       setJobs(data)
     }
     fetchAllJobs()
-  },[filter, search])
+  },[filter, search,sort])
 
-  
+  const handleReset = () => {
+    setFilter('')
+    setSearch('')
+    setSort('')
+  }
+
   // console.log(search)
 
   return (
@@ -27,6 +33,7 @@ const AllJobs = () => {
               name='category'
               id='category'
               className='border p-4 rounded-lg'
+              value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
               <option value=''>Filter By Category</option>
@@ -43,6 +50,7 @@ const AllJobs = () => {
                 type='text'
                 name='search'
                 onChange={e=> setSearch(e.target.value)}
+                value={search}
                 placeholder='Enter Job Title'
                 aria-label='Enter Job Title'
               />
@@ -56,6 +64,8 @@ const AllJobs = () => {
             <select
               name='category'
               id='category'
+              onChange={e=> setSort(e.target.value)}
+              value={sort}
               className='border p-4 rounded-md'
             >
               <option value=''>Sort By Deadline</option>
@@ -63,7 +73,7 @@ const AllJobs = () => {
               <option value='asc'>Ascending Order</option>
             </select>
           </div>
-          <button className='btn'>Reset</button>
+          <button className='btn' onClick={handleReset}>Reset</button>
         </div>
         <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {
